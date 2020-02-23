@@ -13,30 +13,33 @@ import SwiftUI
 
 
 /// 第一种结构符合View协议，并描述了视图的内容和布局。
-struct ContentView: View {
+struct LandmarkDetail: View {
+    
+    var landmark: Landmark
+    
     var body: some View {
         
         VStack {
 
             /// 要允许地图内容扩展到屏幕的顶部边缘，请将修改器添加到地图视图。edgesIgnoringSafeArea(.top)
 
-            MapView()
+            MapView(coordinate: landmark.locationCoordinate)
                 .edgesIgnoringSafeArea(.top)
                 .frame(height: 300)
             
             /// 图像垂直偏移-130点，并从视图底部填充-130点。
-            CircleImage()
+            CircleImage(image: landmark.image)
                 .offset( y: -130)
                 .padding(.bottom, -130)
             
             VStack(alignment: .leading) {
-                Text("Turtle Rock")
+                Text(landmark.name)
                     .font(.title)
                 HStack(alignment: .top) {
-                    Text("Joshua Tree National Park")
+                    Text(landmark.park)
                         .font(.subheadline)
                     Spacer() // 添加间距
-                    Text("California")
+                    Text(landmark.state)
                         .font(.subheadline)
                 }
                 
@@ -51,6 +54,8 @@ struct ContentView: View {
             /// 最外层VStack左右上下添加间距
 //        .padding()
         
+            .navigationBarTitle(Text(landmark.name), displayMode: .inline)
+        
     }
 }
 
@@ -58,6 +63,7 @@ struct ContentView: View {
 /// 第一种结构符合View协议，并描述了视图的内容和布局。
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+//        LandmarkDetail()
+        LandmarkDetail(landmark: landmarkData[0])
     }
 }
