@@ -15,7 +15,14 @@ import SwiftUI
 /// 第一种结构符合View协议，并描述了视图的内容和布局。
 struct LandmarkDetail: View {
     
-    var landmark: Landmark
+     var landmark: Landmark
+    
+    @EnvironmentObject var userData: UserData
+    
+    var landmarkIndex: Int {
+        userData.landmarks.firstIndex(where: {$0.id == landmark.id})!
+    }
+    
     
     var body: some View {
         
@@ -33,8 +40,23 @@ struct LandmarkDetail: View {
                 .padding(.bottom, -130)
             
             VStack(alignment: .leading) {
-                Text(landmark.name)
-                    .font(.title)
+                HStack {
+                    Text(landmark.name)
+                        .font(.title)
+                    
+                    // 是否收藏
+                    Button(action:{
+                        self.userData.landmarks[self.landmarkIndex].isFavorite.toggle()
+                    }) {
+                        if self.userData.landmarks[self.landmarkIndex].isFavorite {
+                            Image(systemName:"star.fill")
+                                .foregroundColor(Color.yellow)
+                        } else {
+                            Image(systemName:"star")
+                                .foregroundColor(Color.gray)
+                        }
+                    }
+                }
                 HStack(alignment: .top) {
                     Text(landmark.park)
                         .font(.subheadline)
@@ -65,5 +87,6 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
 //        LandmarkDetail()
         LandmarkDetail(landmark: landmarkData[0])
+            .environmentObject(UserData())
     }
 }
